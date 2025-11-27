@@ -12,4 +12,10 @@ Route::get('/products/{product}', [ProductController::class, 'show'])->name('pro
 Route::delete('/products/{products}', [ProductController::class, 'destroy'])->name('products.destroy');
 Route::get('/products/{product}/edit', [ProductController::class, 'edit'])->name('products.edit');
 Route::put('/products/{product}', [ProductController::class, 'update'])->name('products.update');
+Route::post('/products/{product}/tags', [ProductController::class, 'addTag'])
+    ->name('tags.store');
+
+
+
+
 

@@ -19,7 +19,7 @@ class ProductController extends Controller
 
     public function store(Request $request) {
         $validated = $request->validate([
-            'name' => 'required|unique:products|max:255',
+            'name' => 'required|max:255|unique:products,name',
             'quantity' => 'required|integer',
             'description' => 'required',
             'tags' => 'nullable|array',
@@ -28,21 +28,33 @@ class ProductController extends Controller
 
         $product = Product::create($validated);
 
+        if ($request->has('tags')) {
+            $tagIds = [];
+            foreach ($request->tags as $tagName) {
+                $tag = Tag::firstOrCreate(['name' => $tagName]);
+                $tagIds[] = $tag->id;
+            }
+            $product->tags()->sync($tagIds);
+        }
+
         return redirect()
-                ->route('products.show', [$product]) // vai ['product' => $product]
-                ->with('message', "Product created successfully");
+            ->route('products.show', $product)
+            ->with('message', "Product created successfully");
     }
 
     public function show(Product $product) {
-
-        return view('products.show', compact('product'));
+        $tags = Tag::all();
+        return view('products.show', [
+            'product' => $product,
+            'tags' => $tags,
+        ]);
     }
 
     public function destroy(Product $product) {
         $product->delete();
         return redirect()
-                ->route('products.index')
-                ->with('message', "Product deleted successfully");
+            ->route('products.index')
+            ->with('message', "Product deleted successfully");
     }
 
     public function edit(Product $product) {
@@ -51,16 +63,30 @@ class ProductController extends Controller
 
     public function update(Request $request, Product $product) {
         $validated = $request->validate([
-            'name' => 'required|unique:products|max:255',
+            'name' => 'required|max:255|unique:products,name,' . $product->id,
             'quantity' => 'required|integer',
             'description' => 'required',
             'tags' => 'nullable|string',
         ]);
 
         $product->update($validated);
+
+        $tagNames = $request->input('tags', '');
+        $tagIds = [];
+
+        if (!empty($tagNames)) {
+            $tagNames = array_filter(explode(',', $tagNames));
+            foreach ($tagNames as $name) {
+                $tag = Tag::firstOrCreate(['name' => trim($name)]);
+                $tagIds[] = $tag->id;
+            }
+        }
+
+        $product->tags()->sync($tagIds);
+
         return redirect()
-                ->route('products.show', [$product])
-                ->with('message', "Product updated successfully");
+            ->route('products.show', $product)
+            ->with('message', "Product updated successfully");
     }
 
     public function decreaseQuantity(Request $request, Product $product) {
@@ -70,12 +96,27 @@ class ProductController extends Controller
 
         if ($product->decreaseQuantity($request->amount)) {
             return redirect()
-                    ->route('products.show', [$product])
-                    ->with('message', "Product quantity decreased successfully");
-        } else {
-            return redirect()
-                    ->route('products.show', [$product])
-                    ->withErrors(['amount' => 'Not enough stock to decrease quantity.']);
+                ->route('products.show', $product)
+                ->with('message', "Product quantity decreased successfully");
         }
+
+        return redirect()
+            ->route('products.show', $product)
+            ->withErrors(['amount' => 'Not enough stock to decrease quantity.']);
+    }
+
+    public function addTag(Request $request, Product $product) {
+        $request->validate([
+            'name' => 'required|string|max:255',
+        ]);
+
+        $tag = Tag::firstOrCreate(['name' => $request->name]);
+
+        $product->tags()->syncWithoutDetaching([$tag->id]);
+
+        return response()->json([
+            'tag' => $tag,
+            'message' => 'Birka saglabāta!',
+        ]);
     }
 }
