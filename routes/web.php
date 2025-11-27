@@ -13,3 +13,6 @@ Route::delete('/products/{products}', [ProductController::class, 'destroy'])->na
 Route::get('/products/{product}/edit', [ProductController::class, 'edit'])->name('products.edit');
 Route::put('/products/{products}', [ProductController::class, 'update'])->name('products.update');
 
+
+Route::put('/products/{id}/quantity', [ProductController::class, 'updateQuantity'])
+    ->name('products.updateQuantity');

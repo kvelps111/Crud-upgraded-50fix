@@ -30,8 +30,8 @@ class ProductController extends Controller
                 ->with('message', "Product created successfully");
     }
 
-    public function show(Product $product, $id) {
-        $product=Product::find($id);
+    public function show(Product $product) {
+       
         return view('products.show', compact('product'));
     }
 
@@ -55,7 +55,7 @@ class ProductController extends Controller
 
         $product->update($validated);
         return redirect()
-                ->route('products.show', [$product])
+                ->route('products.show', $product)
                 ->with('message', "Product updated successfully");
     }
 
@@ -74,4 +74,22 @@ class ProductController extends Controller
                     ->withErrors(['amount' => 'Not enough stock to decrease quantity.']);
         }
     }
+
+    public function updateQuantity(Request $request, $id)
+{
+    $product = Product::findOrFail($id);
+
+    
+    $request->validate([
+        'quantity' => 'required|integer|min:0',
+    ]);
+
+    $product->quantity = $request->quantity;
+    $product->save();
+
+    return response()->json([
+        'success' => true,
+        'quantity' => $product->quantity
+    ]);
+}
 }
