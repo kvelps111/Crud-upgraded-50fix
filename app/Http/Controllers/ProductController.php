@@ -22,6 +22,8 @@ class ProductController extends Controller
             'name' => 'required|unique:products|max:255',
             'quantity' => 'required|integer',
             'description' => 'required',
+            'tags' => 'nullable|array',
+            'tags.*' => 'string|max:50',
         ]);
 
         $product = Product::create($validated);
@@ -52,6 +54,7 @@ class ProductController extends Controller
             'name' => 'required|unique:products|max:255',
             'quantity' => 'required|integer',
             'description' => 'required',
+            'tags' => 'nullable|string',
         ]);
 
         $product->update($validated);
