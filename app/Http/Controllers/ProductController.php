@@ -33,7 +33,8 @@ class ProductController extends Controller
             ->with('message', "Product created successfully");
     }
 
-    public function show(Product $product) {
+    public function show(Product $product)
+    {
 
         return view('products.show', compact('product'));
     }
