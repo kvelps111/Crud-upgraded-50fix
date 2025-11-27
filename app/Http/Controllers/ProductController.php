@@ -30,8 +30,8 @@ class ProductController extends Controller
                 ->with('message', "Product created successfully");
     }
 
-    public function show(Product $product, $id) {
-        $product=Product::find($id);
+    public function show(Product $product) {
+   
         return view('products.show', compact('product'));
     }
 
@@ -46,7 +46,7 @@ class ProductController extends Controller
         return view('products.edit', compact('product'));
     }
 
-    public function update(Request $request, Product $product) {
+   public function update(Request $request, Product $product) {
         $validated = $request->validate([
             'name' => 'required|unique:products|max:255',
             'quantity' => 'required|integer',
