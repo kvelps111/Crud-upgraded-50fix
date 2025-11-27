@@ -61,7 +61,7 @@ class ProductController extends Controller
 
     public function decreaseQuantity(Request $request, Product $product) {
         $request->validate([
-            'amount' => 'required|integer|min:1',
+            'quantity' => 'required|integer|min:1',
         ]);
 
         if ($product->decreaseQuantity($request->amount)) {
@@ -74,4 +74,15 @@ class ProductController extends Controller
                     ->withErrors(['amount' => 'Not enough stock to decrease quantity.']);
         }
     }
+
+    
+public function updateQuantity(Request $request, $id)
+{
+    $product = Product::findOrFail($id);
+    $product->quantity = $request->quantity;
+    $product->save();
+
+    return response()->json(['success' => true, 'quantity' => $product->quantity]);
+}
+
 }
