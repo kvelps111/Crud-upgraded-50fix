@@ -1,7 +1,9 @@
 <?php
 
+use App\Http\Controllers\TagController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProductController;
+
 
 Route::redirect('/', '/products');
 
@@ -11,5 +13,6 @@ Route::post('/products/store', [ProductController::class, 'store'])->name('produ
 Route::get('/products/{product}', [ProductController::class, 'show'])->name('products.show');
 Route::delete('/products/{products}', [ProductController::class, 'destroy'])->name('products.destroy');
 Route::get('/products/{product}/edit', [ProductController::class, 'edit'])->name('products.edit');
-Route::put('/products/{products}', [ProductController::class, 'update'])->name('products.update');
+Route::put('/products/{product}', [ProductController::class, 'update'])->name('products.update');
+Route::get('/products/tags', [TagController::class, 'show'])->name('products.tags');
 
