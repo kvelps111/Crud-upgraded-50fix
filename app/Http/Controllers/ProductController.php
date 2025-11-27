@@ -30,7 +30,8 @@ class ProductController extends Controller
                 ->with('message', "Product created successfully");
     }
 
-    public function show(Product $product) {
+    public function show(Product $product, $id) {
+        $product=Product::find($id);
         return view('products.show', compact('product'));
     }
 

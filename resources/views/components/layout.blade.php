@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ $title ?? 'Products' }}</title>
-    @vite(['resources/css/styles.css', 'resources/js/app.js'])
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    
 </head>
 <body>
     <div class="container">
@@ -12,13 +13,13 @@
             <x-navigation />
         </header>
 
-        <sidebar>
+        <aside>
             @if (session('status'))
                 <div class="status-message">
                     {{ session('status') }}
                 </div>
             @endif
-        </sidebar>
+</aside>
 
         <main>
             {{ $slot }}
