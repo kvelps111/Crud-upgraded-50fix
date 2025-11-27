@@ -17,3 +17,6 @@ Route::put('/products/{product}', [ProductController::class, 'update'])->name('p
 Route::post('/products/{id}/update-quantity', [ProductController::class, 'updateQuantity']);
 
 
+
+Route::put('/products/{id}/quantity', [ProductController::class, 'updateQuantity'])
+    ->name('products.updateQuantity');

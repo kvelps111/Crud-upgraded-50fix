@@ -40,7 +40,7 @@ class ProductController extends Controller
         $tags = Tag::all();
         return view('products.show', [
             'product' => $product,
-            'tags' => $tags,
+            'tags' => $tags
         ]);
     }
 

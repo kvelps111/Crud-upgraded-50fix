@@ -3,6 +3,7 @@
         Edit product
     </x-slot>
 
+    {{-- Error messages --}}
     @if ($errors->any())
         <div class="error-message">
             <ul>
@@ -13,60 +14,61 @@
         </div>
     @endif
 
-    <form action="{{ route('products.update', $product->id) }}" method="post" id="productForm">
+    {{-- Regular form for name/description --}}
+    <form action="{{ route('products.update', $product->id) }}" method="post" id="product-form">
         @csrf
         @method('PUT')
 
+        <label>Name:</label>
         <input type="text" name="name" value="{{ $product->name }}">
 
-        <div style="display:flex;align-items:center;gap:8px;">
-            <button type="button" id="decrease">-</button>
-            <input type="number" id="quantity" name="quantity" value="{{ $product->quantity }}" min="0">
-            <button type="button" id="increase">+</button>
-        </div>
+        <label>Quantity:</label>
+        <input type="number" name="quantity" value="{{ $product->quantity }}" readonly>
 
+        {{-- AJAX buttons for quantity --}}
+        <button type="button" class="qtyplus" onclick="plusqty()">+</button>
+        <button type="button" class="qtyminus" onclick="minusqty()">-</button>
+
+        <label>Description:</label>
         <textarea name="description">{{ $product->description }}</textarea>
+
         <input type="submit" value="Submit">
     </form>
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    {{-- AJAX Script --}}
     <script>
-        function updateQuantity(newQuantity) {
-            $.ajax({
-                url: '/products/{{ $product->id }}/update-quantity',
-                type: 'POST',
-                data: {
-                    quantity: newQuantity,
-                    _token: '{{ csrf_token() }}'
+        function updateQuantity(productId, newQuantity) {
+            fetch(`/products/${productId}/quantity`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
                 },
-                success: function(response) {
-                    console.log('Quantity updated:', response.quantity);
-                },
-                error: function(xhr) {
-                    alert('Error updating quantity');
+                body: JSON.stringify({ quantity: newQuantity })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    document.querySelector('input[name="quantity"]').value = data.quantity;
+                } else {
+                    alert("Failed to update quantity");
                 }
-            });
+            })
+            .catch(error => console.error('Error:', error));
         }
 
-        $('#increase').on('click', function() {
-            let current = parseInt($('#quantity').val());
-            let newQuantity = current + 1;
-            $('#quantity').val(newQuantity);
-            updateQuantity(newQuantity);
-        });
+        function plusqty() {
+            let input = document.querySelector('input[name="quantity"]');
+            let current = parseInt(input.value);
+            updateQuantity({{ $product->id }}, current + 1);
+        }
 
-        $('#decrease').on('click', function() {
-            let current = parseInt($('#quantity').val());
+        function minusqty() {
+            let input = document.querySelector('input[name="quantity"]');
+            let current = parseInt(input.value);
             if (current > 0) {
-                let newQuantity = current - 1;
-                $('#quantity').val(newQuantity);
-                updateQuantity(newQuantity);
+                updateQuantity({{ $product->id }}, current - 1);
             }
-        });
-
-        
-        $('#quantity').on('change', function() {
-            updateQuantity($(this).val());
-        });
+        }
     </script>
 </x-layout>
