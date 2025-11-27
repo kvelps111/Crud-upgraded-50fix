@@ -178,6 +178,7 @@ form input[type="submit"]:hover {
     padding-left: 20px;
 }
 
+
 /* Responsive adjustments */
 @media (max-width: 768px) {
     .container {
