@@ -37,12 +37,11 @@ class ProductController extends Controller
     }
 
     public function show(Product $product) {
-<<<<<<< HEAD
-   
-=======
-
->>>>>>> new-branch-niks
-        return view('products.show', compact('product'));
+        $tags = Tag::all();
+        return view('products.show', [
+            'product' => $product,
+            'tags' => $tags,
+        ]);
     }
 
     public function destroy(Product $product)
@@ -58,12 +57,9 @@ class ProductController extends Controller
         return view('products.edit', compact('product'));
     }
 
-<<<<<<< HEAD
-   public function update(Request $request, Product $product) {
-=======
+   
     public function update(Request $request, Product $product)
     {
->>>>>>> new-branch-niks
         $validated = $request->validate([
             'name' => 'required|unique:products|max:255',
             'quantity' => 'required|integer',

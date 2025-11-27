@@ -14,8 +14,6 @@ Route::get('/products/{product}', [ProductController::class, 'show'])->name('pro
 Route::delete('/products/{product}', [ProductController::class, 'destroy'])->name('products.destroy');
 Route::get('/products/{product}/edit', [ProductController::class, 'edit'])->name('products.edit');
 Route::put('/products/{product}', [ProductController::class, 'update'])->name('products.update');
-Route::get('/products/tags', [TagController::class, 'show'])->name('products.tags');
-
 Route::post('/products/{id}/update-quantity', [ProductController::class, 'updateQuantity']);
 
 
