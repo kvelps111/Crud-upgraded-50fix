@@ -8,16 +8,16 @@ body {
 }
 
 header {
-  grid-area: header;
+    grid-area: header;
 }
 main {
-  grid-area: main;
+    grid-area: main;
 }
 aside {
-  grid-area: sidebar;
+    grid-area: sidebar;
 }
 footer {
-  grid-area: footer;
+    grid-area: footer;
 }
 
 /* Main Container */
@@ -143,6 +143,10 @@ form input[type="submit"]:hover {
     background-color: #f1c40f;
 }
 
+.btn-tag {
+    background-color: greenyellow;
+}
+
 .btn-delete {
     background-color: #e74c3c;
     border: none;
@@ -152,7 +156,8 @@ form input[type="submit"]:hover {
 }
 
 /* Status & Error Messages */
-.status-message, .error-message {
+.status-message,
+.error-message {
     padding: 15px;
     border-radius: 4px;
     margin-bottom: 20px;
